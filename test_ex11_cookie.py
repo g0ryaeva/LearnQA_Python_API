@@ -7,4 +7,5 @@ def test_homework_cookie():
     print(cookies)
 
     cookie_value = response.cookies.get('HomeWork')
-    assert cookies == {'HomeWork': cookie_value}, f"Unexpected cookie: {cookies}"
+    assert 'HomeWork' in cookies, f"There is no cookie 'Homework' in cookies"
+    assert cookies == {'HomeWork': cookie_value}, f"Unexpected cookie value: {cookies}"
