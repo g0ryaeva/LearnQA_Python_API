@@ -13,7 +13,7 @@ class Environment:
         try:
             self.env = os.environ['ENV']
         except KeyError:
-            self.env = self.DEV
+            self.env = self.PROD
 
     def get_base_url(self):
         if self.env in self.URLS:
