@@ -17,6 +17,8 @@ class TestUserRegister(BaseCase):
         ("lastName")
     ]
 
+    @allure.severity(allure.severity_level.BLOCKER)
+    @allure.description("This test checks creation user")
     def test_create_user_successfully(self):
         data = self.prepare_registration_data()
 
@@ -25,6 +27,8 @@ class TestUserRegister(BaseCase):
         Assertions.assert_code_status(response, 200)
         Assertions.assert_json_has_key(response, "id")
 
+
+    @allure.severity(allure.severity_level.CRITICAL)
     @allure.description("This test checks creation user with existing email")
     def test_create_user_with_existing_email(self):
         email = "vinkotov@example.com"
@@ -36,6 +40,8 @@ class TestUserRegister(BaseCase):
             f"Unexpected response content {response.content}"
         Assertions.assert_code_status(response, 400)
 
+
+    @allure.severity(allure.severity_level.NORMAL)
     @allure.description("This test checks creation user with incorrect email")
     def test_create_user_with_incorrect_email(self):
         email = "vinkotovexample.com"
@@ -48,6 +54,7 @@ class TestUserRegister(BaseCase):
         Assertions.assert_code_status(response, 400)
 
     @pytest.mark.parametrize('field', exclude_params)
+    @allure.severity(allure.severity_level.CRITICAL)
     @allure.description("This test checks creation user with missing field")
     def test_create_user_with_missing_field(self, field):
         data = self.prepare_registration_data()
@@ -60,6 +67,7 @@ class TestUserRegister(BaseCase):
         Assertions.assert_code_status(response, 400)
 
     @allure.description("This test checks creation user with short username")
+    @allure.severity(allure.severity_level.NORMAL)
     def test_create_user_with_short_username(self):
         data = self.prepare_registration_data()
         field = 'username'
@@ -72,6 +80,7 @@ class TestUserRegister(BaseCase):
         Assertions.assert_code_status(response, 400)
 
     @allure.description("This test checks creation user with long username")
+    @allure.label("negative")
     def test_create_user_with_long_username(self):
         data = self.prepare_registration_data()
         field = 'username'

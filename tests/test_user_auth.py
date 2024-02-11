@@ -23,6 +23,7 @@ class TestUserAuth(BaseCase):
         self.user_id_from_auth_method = self.get_json_value(response1, "user_id")
 
     @allure.description("This test successfully authorize user by email and password")
+    @allure.severity(allure.severity_level.BLOCKER)
     def test_auth_user(self):
         response2 = MyRequests.get(
             "/user/auth",
@@ -38,23 +39,25 @@ class TestUserAuth(BaseCase):
         )
 
     @allure.description("This test checks authorization status w\o sending auth cookie or token")
+    @allure.severity(allure.severity_level.CRITICAL)
     @pytest.mark.parametrize('condition', exclude_params)
     def test_negative_auth_check(self, condition):
-        if condition == "no_cookies":
-            response2 = MyRequests.get(
-                "/user/auth",
-                headers={"x-csrf-token": self.token}
-            )
-        else:
-            response2 = MyRequests.get(
-                "/user/auth",
-                cookies={"auth_sid": self.auth_sid}
-            )
+        with allure.step(f"Condition: {condition}"):
+            if condition == "no_cookies":
+                response2 = MyRequests.get(
+                    "/user/auth",
+                    headers={"x-csrf-token": self.token}
+                )
+            else:
+                response2 = MyRequests.get(
+                    "/user/auth",
+                    cookies={"auth_sid": self.auth_sid}
+                )
 
-        Assertions.assert_json_value_by_name(
-            response2,
-            "user_id",
-            0,
-            f"User is authorized with condition{condition}"
-        )
+            Assertions.assert_json_value_by_name(
+                response2,
+                "user_id",
+                0,
+                f"User is authorized with condition{condition}"
+            )
 
